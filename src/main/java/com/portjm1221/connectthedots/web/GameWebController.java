@@ -1,5 +1,6 @@
 package com.portjm1221.connectthedots.web;
 
+import com.portjm1221.connectthedots.core.models.Payload;
 import org.springframework.web.bind.annotation.*;
 
 @RestController

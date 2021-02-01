@@ -1,4 +1,4 @@
-package com.portjm1221.connectthedots.web;
+package com.portjm1221.connectthedots.core.models;
 
 public class Line {
     private Point start;
