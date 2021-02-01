@@ -25,59 +25,56 @@ public class NodeClickedOperation implements GameOperation{
             //No, is node valid start node?
             if(gameService.isValidStartNode(game, point)){
                 gameService.setActivePoint(game, point);
-                return getPayload("VALID_START_NODE", GameService.SelectSecondNodeText);
+                return getPayload("VALID_START_NODE", GameService.SelectSecondNodeText, null, GameService.getPlayerNameText(game));
             }else {
                 return getInvalidStartNodePayload();
             }
         }else{
             //Yes, is node valid end node?
-            if(gameService.isValidEndNode(game, point)){
-                gameService.rotatePlayer(game);
-                Payload payload = getValidEndNodePayload();
-                gameService.setPath(game.getAdjMatrix(), game.getActivePoint(), point, game.getVertices());
-                gameService.clearActivePoint(game);
-                return payload;
+            if(gameService.isValidEndNode(point, game.getActivePoint(), game.getAdjMatrix(), game.getVertices())){
                 //Does this win the game?
-
+                if(!gameService.isLastMove(game.getAdjMatrix(), point, game.getVertices())){
+                    gameService.rotatePlayer(game);
+                    Payload payload = getValidEndNodePayload();
+                    gameService.setPath(game.getAdjMatrix(), game.getActivePoint(), point, game.getVertices());
+                    gameService.clearActivePoint(game);
+                    return payload;
+                }else {
+                    return getPayload("GAME_OVER", GameService.playerWins(game), getNewLine(), GameService.GameOver);
+                }
             }else {
                 //On failure to pick a correct node, it resets on the frontend active node status
                 gameService.clearActivePoint(game);
-                return getPayload("INVALID_END_NODE", GameService.InvalidMoveText);
+                return getPayload("INVALID_END_NODE", GameService.InvalidMoveText, null, GameService.getPlayerNameText(game));
             }
         }
     }
 
-    private Payload getPayload(String invalidMsg, String invalidMoveText) {
+    private Payload getPayload(String msg, String message, Line newLine, String heading) {
         return new Payload(
-                invalidMsg,
+                msg,
                 new StateUpdate(
-                        null,
-                        GameService.getPlayerNameText(game),
-                        invalidMoveText
+                        newLine,
+                        heading,
+                        message
                 )
         );
     }
 
     private Payload getInvalidStartNodePayload() {
-        return getPayload("INVALID_START_NODE", GameService.NotValidStartingPosition);
+        return getPayload("INVALID_START_NODE", GameService.NotValidStartingPosition, null, GameService.getPlayerNameText(game));
     }
 
     private Payload getValidEndNodePayload() {
-        return new Payload(
-                "VALID_END_NODE",
-                new StateUpdate(
-                        new Line(
-                                new Point(game.getActivePoint().getX(), game.getActivePoint().getY()),
-                                new Point(point.getX(), point.getY())
-                        ),
-                        GameService.getPlayerNameText(game),
-                        null
-                )
-        );
+        return getPayload("VALID_END_NODE", null, getNewLine(), GameService.getPlayerNameText(game));
     }
 
-
-
+    private Line getNewLine() {
+        return new Line(
+                new Point(game.getActivePoint().getX(), game.getActivePoint().getY()),
+                new Point(point.getX(), point.getY())
+        );
+    }
 
 
 }

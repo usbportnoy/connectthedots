@@ -13,7 +13,7 @@ public class Game {
     public Game(int vertices, int maxPlayers) {
         this.vertices = vertices;
         this.maxPlayers = maxPlayers;
-        player=1;
+        player = 1;
         adjMatrix = new boolean[vertices][vertices];
     }
 
