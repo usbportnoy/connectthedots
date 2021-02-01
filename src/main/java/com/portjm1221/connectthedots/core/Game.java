@@ -1,14 +1,20 @@
 package com.portjm1221.connectthedots.core;
 
+import com.portjm1221.connectthedots.core.models.Point;
+
 public class Game {
 
     private boolean[][] adjMatrix;
     private int vertices;
-    private boolean nodeActive;
+    private int maxPlayers;
+    private Point activePoint;
+    private int player;
 
-    public Game(int vertices) {
+    public Game(int vertices, int maxPlayers) {
         this.vertices = vertices;
-        adjMatrix = new boolean[vertices][vertices];
+        this.maxPlayers = maxPlayers;
+        player=1;
+        adjMatrix = new boolean[vertices*vertices][vertices*vertices];
     }
 
     public boolean[][] getAdjMatrix() {
@@ -39,11 +45,27 @@ public class Game {
         return s.toString();
     }
 
-    public boolean isNodeActive() {
-        return nodeActive;
+    public Point getActivePoint() {
+        return activePoint;
     }
 
-    public void setNodeActive(boolean nodeActive) {
-        this.nodeActive = nodeActive;
+    public void setActivePoint(Point activePoint) {
+        this.activePoint = activePoint;
+    }
+
+    public int getMaxPlayers() {
+        return maxPlayers;
+    }
+
+    public void setMaxPlayers(int maxPlayers) {
+        this.maxPlayers = maxPlayers;
+    }
+
+    public int getPlayer() {
+        return player;
+    }
+
+    public void setPlayer(int player) {
+        this.player = player;
     }
 }

@@ -10,7 +10,7 @@ public class GameExecutorConfig {
 
     @Bean
     public GameExecutor gameExecutor(){
-        return new GameExecutor(new Game(4));
+        return new GameExecutor(new Game(4, 2));
     }
 
 }

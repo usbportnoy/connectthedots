@@ -1,81 +1,84 @@
 package com.portjm1221.connectthedots.core;
 
+import com.portjm1221.connectthedots.core.models.Line;
 import com.portjm1221.connectthedots.core.models.Payload;
 import com.portjm1221.connectthedots.core.models.Point;
 import com.portjm1221.connectthedots.core.models.StateUpdate;
+import com.portjm1221.connectthedots.service.GameService;
 
 public class NodeClickedOperation implements GameOperation{
 
     private Game game;
     private Point point;
+    private GameService gameService;
 
     public NodeClickedOperation(Game game, Point point) {
         this.game = game;
         this.point = point;
+        this.gameService = new GameService();
     }
 
     @Override
     public Payload execute() {
         //Are we in the middle of a players move?
-        if(!game.isNodeActive()){
+        if(game.getActivePoint() == null){
             //No, is node valid start node?
-            if(isValidStartNode(game, point)){
-                game.setNodeActive(true);
-                return new Payload("VALID_START_NODE", new StateUpdate(null, "Player 2", "Select a second node to complete the line."));
+            if(gameService.isValidStartNode(game, point)){
+                gameService.setActivePoint(game, point);
+                gameService.rotatePlayer(game);
+                return getInvalidPayload("VALID_START_NODE", GameService.SelectSecondNodeText);
             }else {
-                return new Payload("INVALID_START_NODE", new StateUpdate(null, "Player 2", "Select a second node to complete the line."));
+                return getInvalidStartNodePayload();
             }
         }else{
             //Yes, is node valid end node?
-            //Does this win the game?
-        }
-        return null;
-    }
+            if(gameService.isValidEndNode(game, point)){
+                gameService.rotatePlayer(game);
+                Payload payload = getValidEndNodePayload();
+                gameService.setPath(game.getAdjMatrix(), game.getActivePoint(), point, game.getVertices());
+                gameService.clearActivePoint(game);
+                return payload;
+                //Does this win the game?
 
-    private boolean isValidStartNode(Game game, Point point) {
-        //Is this the start of the game?
-        if(isCleanBoard(game.getAdjMatrix())){
-            return true;
-        }else {
-            //Is it the end of a path? -- The end of a path will only have a single path connecting
-            return isEndOfPath(game.getAdjMatrix(), point, game.getVertices());
-        }
-    }
-
-    private boolean isEndOfPath(boolean[][] adjMatrix, Point point, int vertices) {
-        int count = getCountOfPathsToPoint(adjMatrix, point, vertices);
-
-        return count == 1;
-    }
-
-    private int getCountOfPathsToPoint(boolean[][] adjMatrix, Point point, int vertices) {
-        int count = 0;
-        for (int x = -1; x < 2; x++) {
-            for (int y = -1; y < 2; y++) {
-                Point adj = new Point(point.getX()+x, point.getY()+y);
-                if((adj.getX() >= 0 && adj.getY() >= 0) && (adj.getX() + adj.getY() < vertices)){
-                    int from = point.getX() + point.getY();
-                    int to = adj.getX() + adj.getY();
-                    if(adjMatrix[from][to]){
-                        count++;
-                    }
-                }
+            }else {
+                //On failure to pick a correct node, it resets on the frontend active node status
+                gameService.clearActivePoint(game);
+                return getInvalidPayload("INVALID_END_NODE", GameService.InvalidMoveText);
             }
         }
-        return count;
     }
 
-    private boolean isCleanBoard(boolean[][] adjMatrix) {
-        if(adjMatrix == null){
-            //todo throw error
-        }
-
-        for (boolean[] matrix : adjMatrix) {
-            for (boolean b : matrix) {
-                if(b) return false;
-            }
-        }
-
-        return true;
+    private Payload getInvalidPayload(String invalidMsg, String invalidMoveText) {
+        return new Payload(
+                invalidMsg,
+                new StateUpdate(
+                        null,
+                        GameService.getPlayerNameText(game),
+                        invalidMoveText
+                )
+        );
     }
+
+    private Payload getInvalidStartNodePayload() {
+        return getInvalidPayload("INVALID_START_NODE", GameService.NotValidStartingPosition);
+    }
+
+    private Payload getValidEndNodePayload() {
+        return new Payload(
+                "VALID_END_NODE",
+                new StateUpdate(
+                        new Line(
+                                new Point(game.getActivePoint().getX(), game.getActivePoint().getY()),
+                                new Point(point.getX(), point.getY())
+                        ),
+                        GameService.getPlayerNameText(game),
+                        null
+                )
+        );
+    }
+
+
+
+
+
 }

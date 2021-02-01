@@ -14,15 +14,25 @@ import static org.assertj.core.api.Assertions.assertThat;
 class ConnectthedotsApplicationTests {
 	@Test
 	void printsGame() {
-		Game game = new Game(4);
+		Game game = new Game(4, 2);
 		assertThat(game.toString()).isNotNull();
 	}
 
 	@Test
-	void firstMove() {
-		Game game = new Game(4);
+	void validStart() {
+		Game game = new Game(4, 2);
 		GameExecutor gameExecutor = new GameExecutor(game);
 		Payload payload = gameExecutor.executeOperation(new NodeClickedOperation(game, new Point(0, 0)));
 		assertThat(payload.getMsg()).isEqualTo("VALID_START_NODE");
 	}
+
+	@Test
+	void validEndMove(){
+		Game game = new Game(4, 2);
+		GameExecutor gameExecutor = new GameExecutor(game);
+		gameExecutor.executeOperation(new NodeClickedOperation(game, new Point(0, 0)));
+		Payload payload = gameExecutor.executeOperation(new NodeClickedOperation(game, new Point(1, 0)));
+		assertThat(payload.getMsg()).isEqualTo("VALID_END_NODE");
+	}
+
 }

@@ -2,6 +2,7 @@ package com.portjm1221.connectthedots.core;
 
 import com.portjm1221.connectthedots.core.models.Payload;
 import com.portjm1221.connectthedots.core.models.StateUpdate;
+import com.portjm1221.connectthedots.service.GameService;
 
 public class InitializeOperation implements GameOperation{
 
@@ -13,7 +14,19 @@ public class InitializeOperation implements GameOperation{
 
     @Override
     public Payload execute() {
-        game = new Game(game.getVertices());
-        return new Payload("INITIALIZE", new StateUpdate(null, "Player 1", "Awaiting Player 1's Move"));
+        game.setActivePoint(null);
+        game.setPlayer(1);
+        game.setAdjMatrix(new boolean[game.getVertices()*game.getVertices()][game.getVertices()*game.getVertices()]);
+
+        String heading = String.format("Player %d", game.getPlayer());
+        String message = String.format("Awaiting Player %d's Move", game.getPlayer());
+
+        return new Payload("INITIALIZE",
+                new StateUpdate(
+                        null,
+                        GameService.getPlayerNameText(game),
+                        GameService.awaitingPlayerTurnText(game)
+                )
+        );
     }
 }

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/")
+@CrossOrigin(origins = "*")
 public class GameWebController {
     private GameExecutor gameExecutor;
 

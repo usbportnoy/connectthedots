@@ -1,24 +1,24 @@
 package com.portjm1221.connectthedots.core.models;
 
 public class StateUpdate {
-    private String newLine;
+    private Line newLine;
     private String heading;
     private String message;
 
     public StateUpdate() {
     }
 
-    public StateUpdate(String newLine, String heading, String message) {
+    public StateUpdate(Line newLine, String heading, String message) {
         this.newLine = newLine;
         this.heading = heading;
         this.message = message;
     }
 
-    public String getNewLine() {
+    public Line getNewLine() {
         return newLine;
     }
 
-    public void setNewLine(String newLine) {
+    public void setNewLine(Line newLine) {
         this.newLine = newLine;
     }
 
