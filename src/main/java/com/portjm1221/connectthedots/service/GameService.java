@@ -52,10 +52,7 @@ public class GameService {
             for (int y = -1; y < 2; y++) {
                 Point adj = new Point(point.getX()+x, point.getY()+y);
                 if(isPointInsideBoardBounds(vertices, adj) && !point.equals(adj)){
-                    int from = GameService.getIndexFromPoint(adj, vertices);
-                    int to = GameService.getIndexFromPoint(point, vertices);
-
-                    if(adjMatrix[from][to]){
+                    if(pathExists(adj, point, adjMatrix, vertices)){
                         count++;
                     }
                 }
@@ -64,73 +61,79 @@ public class GameService {
         return count;
     }
 
-    public boolean isValidEndNode(Game game, Point to) {
-        //Is this to adjacent to the active one?
+    private boolean isNodeAdjacent(Point origin, Point other){
         for (int x = -1; x < 2; x++) {
             for (int y = -1; y < 2; y++) {
+                Point adj = new Point(origin.getX()+x, origin.getY()+y);
+                if(other.equals(adj)){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean isValidEndNode(Game game, Point to) {
+        //Is this to adjacent to the active one?
+        if(isNodeAdjacent(game.getActivePoint(), to)){
+            //Does the next to already have connections?
+            if (getCountOfPathsConnectedToPoint(game.getAdjMatrix(), to, game.getVertices()) == 0) {
+                //No it has no connections and could be a connection to a path.
+                //But is any line intersecting possible path?
+                //Vertical and horizontal lines cant be intersected because of the layout of the dot
+                //If it only contains a change to only x, or y but not both its a vertical line
                 Point activePoint = game.getActivePoint();
-                Point adj = new Point(activePoint.getX()+x, activePoint.getY()+y);
-                if(to.equals(adj)){
-                    //Does the next to already have connections?
-                    if(getCountOfPathsConnectedToPoint(game.getAdjMatrix(), to, game.getVertices()) == 0){
-                        //No it has no connections and could be a connection to a path.
-                        //But is any line intersecting possible path?
-                        //Vertical and horizontal lines cant be intersected because of the layout of the dot
-                        //If it only contains a change to only x, or y but not both its a vertical line
-                        int dX = activePoint.getX() - to.getX();
-                        int dY = activePoint.getY() - to.getY();
-                        if(dX != 0 && dY == 0){
+                int dX = activePoint.getX() - to.getX();
+                int dY = activePoint.getY() - to.getY();
+                if (dX != 0 && dY == 0) {
+                    return true;
+                } else if (dX == 0 && dY != 0) {
+                    return true;
+                } else {
+                    if (dX > 0 && dY < 0) {
+                        //DownLeft
+                        //From -x
+                        //To +x
+                        Point toDiag = new Point(activePoint.getX() - 1, activePoint.getY());
+                        Point fromDiag = new Point(to.getX() + 1, to.getY());
+                        if (isPointInsideBoardBounds(game.getVertices(), fromDiag) && isPointInsideBoardBounds(game.getVertices(), toDiag)) {
+                            return !pathExists(fromDiag, toDiag, game.getAdjMatrix(), game.getVertices());
+                        } else {
                             return true;
-                        }else if(dX == 0 && dY != 0){
+                        }
+                    } else if (dX < 0 && dY > 0) {
+                        //UpRight
+                        Point fromDiag = new Point(activePoint.getX() + 1, activePoint.getY());
+                        Point toDiag = new Point(to.getX() - 1, to.getY());
+                        if (isPointInsideBoardBounds(game.getVertices(), fromDiag) && isPointInsideBoardBounds(game.getVertices(), toDiag)) {
+                            return !pathExists(fromDiag, toDiag, game.getAdjMatrix(), game.getVertices());
+                        } else {
                             return true;
-                        }else {
-                            if(dX > 0 && dY < 0){
-                                //DownLeft
-                                //From -x
-                                //To +x
-                                Point toDiag = new Point(activePoint.getX()-1, activePoint.getY());
-                                Point fromDiag = new Point(to.getX()+1, to.getY());
-                                if(isPointInsideBoardBounds(game.getVertices(), fromDiag) && isPointInsideBoardBounds(game.getVertices(), toDiag)){
-                                    return !pathExists(game, fromDiag, toDiag);
-                                }else {
-                                    return true;
-                                }
-                            }else if(dX < 0 && dY > 0){
-                                //UpRight
-                                Point fromDiag = new Point(activePoint.getX()+1, activePoint.getY());
-                                Point toDiag = new Point(to.getX()-1, to.getY());
-                                if(isPointInsideBoardBounds(game.getVertices(), fromDiag) && isPointInsideBoardBounds(game.getVertices(), toDiag)){
-                                    return !pathExists(game, fromDiag, toDiag);
-                                }else {
-                                    return true;
-                                }
-                            }else if(dX < 0 && dY < 0){
-                                //DownRight
-                                //From +x
-                                Point fromDiag = new Point(activePoint.getX()+1, activePoint.getY());
-                                Point toDiag = new Point(to.getX()-1, to.getY());
-                                if(isPointInsideBoardBounds(game.getVertices(), fromDiag) && isPointInsideBoardBounds(game.getVertices(), toDiag)){
-                                    return !pathExists(game, fromDiag, toDiag);
-                                }else {
-                                    return true;
-                                }
-                                //To -x
-                            }else if(dX > 0 && dY > 0){
-                                //UpLeft
-                                Point fromDiag = new Point(to.getX(), to.getY()+1);
-                                Point toDiag =  new Point(activePoint.getX(), activePoint.getY()-1);
-                                if(isPointInsideBoardBounds(game.getVertices(), fromDiag) && isPointInsideBoardBounds(game.getVertices(), toDiag)){
-                                    return !pathExists(game, fromDiag, toDiag);
-                                }else {
-                                    return true;
-                                }
-                            }
+                        }
+                    } else if (dX < 0 && dY < 0) {
+                        //DownRight
+                        //From +x
+                        Point fromDiag = new Point(activePoint.getX() + 1, activePoint.getY());
+                        Point toDiag = new Point(to.getX() - 1, to.getY());
+                        if (isPointInsideBoardBounds(game.getVertices(), fromDiag) && isPointInsideBoardBounds(game.getVertices(), toDiag)) {
+                            return !pathExists(fromDiag, toDiag, game.getAdjMatrix(), game.getVertices());
+                        } else {
+                            return true;
+                        }
+                        //To -x
+                    } else if (dX > 0 && dY > 0) {
+                        //UpLeft
+                        Point fromDiag = new Point(to.getX(), to.getY() + 1);
+                        Point toDiag = new Point(activePoint.getX(), activePoint.getY() - 1);
+                        if (isPointInsideBoardBounds(game.getVertices(), fromDiag) && isPointInsideBoardBounds(game.getVertices(), toDiag)) {
+                            return !pathExists(fromDiag, toDiag, game.getAdjMatrix(), game.getVertices());
+                        } else {
+                            return true;
                         }
                     }
                 }
             }
         }
-
         return false;
     }
 
@@ -160,10 +163,10 @@ public class GameService {
         return true;
     }
 
-    private boolean pathExists(Game game, Point from, Point to){
-        int fromPoint = getIndexFromPoint(from, game.getVertices());
-        int toPoint = getIndexFromPoint(to, game.getVertices());
-        return game.getAdjMatrix()[toPoint][fromPoint] || game.getAdjMatrix()[fromPoint][toPoint];
+    private boolean pathExists(Point from, Point to, boolean[][] adjMatrix, int vertices){
+        int fromPoint = getIndexFromPoint(from, vertices);
+        int toPoint = getIndexFromPoint(to, vertices);
+        return adjMatrix[toPoint][fromPoint] || adjMatrix[fromPoint][toPoint];
     }
 
 }
