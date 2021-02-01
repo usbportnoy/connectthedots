@@ -1,15 +1,23 @@
 package com.portjm1221.connectthedots.web;
 
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/")
 public class GameWebController {
-    @PostMapping
-    public Payload post(@RequestBody Payload body){
+    @GetMapping("/initialize")
+    public Payload initialize(@RequestBody Payload body){
         return null;
     }
+
+    @PostMapping("/node-clicked")
+    public Payload nodeClicked(@RequestBody Payload body){
+        return null;
+    }
+
+    @PostMapping("/error")
+    public Payload error(@RequestBody Payload body){
+        return null;
+    }
+
 }
