@@ -4,6 +4,7 @@ public class Game {
 
     private boolean[][] adjMatrix;
     private int vertices;
+    private boolean nodeActive;
 
     public Game(int vertices) {
         this.vertices = vertices;
@@ -36,5 +37,13 @@ public class Game {
             s.append("\n");
         }
         return s.toString();
+    }
+
+    public boolean isNodeActive() {
+        return nodeActive;
+    }
+
+    public void setNodeActive(boolean nodeActive) {
+        this.nodeActive = nodeActive;
     }
 }

@@ -1,5 +1,7 @@
 package com.portjm1221.connectthedots.core;
 
+import com.portjm1221.connectthedots.core.models.Payload;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,9 +14,9 @@ public class GameExecutor {
         this.operations = new ArrayList<>();
     }
 
-    public synchronized void executeOperation(GameOperation gameOperation){
+    public synchronized Payload executeOperation(GameOperation gameOperation){
         operations.add(gameOperation);
-        gameOperation.execute();
+        return gameOperation.execute();
     }
 
     public List<GameOperation> getOperations() {
