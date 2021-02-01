@@ -18,9 +18,6 @@ public class InitializeOperation implements GameOperation{
         game.setPlayer(1);
         game.setAdjMatrix(new boolean[game.getVertices()*game.getVertices()][game.getVertices()*game.getVertices()]);
 
-        String heading = String.format("Player %d", game.getPlayer());
-        String message = String.format("Awaiting Player %d's Move", game.getPlayer());
-
         return new Payload("INITIALIZE",
                 new StateUpdate(
                         null,

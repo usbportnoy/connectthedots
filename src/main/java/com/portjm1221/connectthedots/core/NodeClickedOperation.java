@@ -25,8 +25,7 @@ public class NodeClickedOperation implements GameOperation{
             //No, is node valid start node?
             if(gameService.isValidStartNode(game, point)){
                 gameService.setActivePoint(game, point);
-                gameService.rotatePlayer(game);
-                return getInvalidPayload("VALID_START_NODE", GameService.SelectSecondNodeText);
+                return getPayload("VALID_START_NODE", GameService.SelectSecondNodeText);
             }else {
                 return getInvalidStartNodePayload();
             }
@@ -43,12 +42,12 @@ public class NodeClickedOperation implements GameOperation{
             }else {
                 //On failure to pick a correct node, it resets on the frontend active node status
                 gameService.clearActivePoint(game);
-                return getInvalidPayload("INVALID_END_NODE", GameService.InvalidMoveText);
+                return getPayload("INVALID_END_NODE", GameService.InvalidMoveText);
             }
         }
     }
 
-    private Payload getInvalidPayload(String invalidMsg, String invalidMoveText) {
+    private Payload getPayload(String invalidMsg, String invalidMoveText) {
         return new Payload(
                 invalidMsg,
                 new StateUpdate(
@@ -60,7 +59,7 @@ public class NodeClickedOperation implements GameOperation{
     }
 
     private Payload getInvalidStartNodePayload() {
-        return getInvalidPayload("INVALID_START_NODE", GameService.NotValidStartingPosition);
+        return getPayload("INVALID_START_NODE", GameService.NotValidStartingPosition);
     }
 
     private Payload getValidEndNodePayload() {
