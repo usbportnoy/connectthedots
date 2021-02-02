@@ -33,18 +33,6 @@ public class Game {
         this.vertices = vertices;
     }
 
-    public String toString() {
-        StringBuilder s = new StringBuilder();
-        for (int row = 0; row < vertices; row++) {
-            s.append(row).append(": ");
-            for (boolean col : adjMatrix[row]) {
-                s.append(col ? 1 : 0).append(" ");
-            }
-            s.append("\n");
-        }
-        return s.toString();
-    }
-
     public Point getActivePoint() {
         return activePoint;
     }
@@ -67,5 +55,17 @@ public class Game {
 
     public void setPlayer(int player) {
         this.player = player;
+    }
+
+    public String toString() {
+        StringBuilder s = new StringBuilder();
+        for (int row = 0; row < vertices; row++) {
+            s.append(row).append(": ");
+            for (boolean col : adjMatrix[row]) {
+                s.append(col ? 1 : 0).append(" ");
+            }
+            s.append("\n");
+        }
+        return s.toString();
     }
 }
