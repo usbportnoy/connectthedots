@@ -35,13 +35,15 @@ https://mathworld.wolfram.com/AdjacencyMatrix.html
 The Game Service provided does logical work for the game, and are the entry points to change the game state. The game operators control the game state.
 
 # Build
+## Quick Build
+
 ```
 ./gradlew assemble
 java -jar ./build/libs/connectthedots-0.0.1-SNAPSHOT.jar
 google-chrome http://localhost:8080/
 ```
 
-
+## Versions And Build Output
 ```
 Ξ connectthedots git:(main) ▶ java -version
 openjdk version "11.0.9.1" 2020-11-04
