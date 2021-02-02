@@ -21,10 +21,20 @@ public class GameService {
         return String.format("Player %d Wins!", player);
     }
 
+    /**
+     *
+     * @param point     Point requesting index for
+     * @param vertices  Number of vertices
+     * @return          index of node
+     */
     public static int getIndexFromPoint(Point point, int vertices) {
         return (point.getY() * vertices) + point.getX();
     }
 
+    /**
+     * Moves player counter to the next player. Loops back to start
+     * @param game
+     */
     public void rotatePlayer(Game game){
         if(game.getPlayer()+1 > game.getMaxPlayers()){
             game.setPlayer(1);
@@ -33,6 +43,13 @@ public class GameService {
         }
     }
 
+    /**
+     * Creates a path between points A and B
+     * @param adjMatrix Adjacent Matrix of paths
+     * @param fromPoint Point A
+     * @param toPoint   Point B
+     * @param vertices  Number of vertices
+     */
     public void setPath(boolean[][] adjMatrix, Point fromPoint, Point toPoint, int vertices) {
         int from = getIndexFromPoint(fromPoint, vertices);
         int to = getIndexFromPoint(toPoint, vertices);
@@ -40,10 +57,16 @@ public class GameService {
         adjMatrix[to][from] = true;
     }
 
+
     public void clearActivePoint(Game game){
         game.setActivePoint(null);
     }
 
+    /**
+     * Sets the active point for the Game. This is the first half of a move
+     * @param game
+     * @param point Point to be active
+     */
     public void setActivePoint(Game game, Point point){
         game.setActivePoint(point);
     }
@@ -67,8 +90,17 @@ public class GameService {
         return count;
     }
 
+    /**
+     * Validates if the node is allowed to be an end node. A node that can be an End node can not have a path already connected
+     *
+     * @param to Destination node
+     * @param activePoint Origin node
+     * @param adjMatrix
+     * @param vertices
+     * @return
+     */
     public boolean isValidEndNode(Point to, Point activePoint, boolean[][] adjMatrix, int vertices) {
-        //Is this to adjacent to the active one?
+        //Is this node adjacent to the active one?
         if(isNodeAdjacent(activePoint, to)){
             //Does the next to already have connections?
             if (getCountOfPathsConnectedToPoint(adjMatrix, to, vertices) == 0) {
@@ -112,7 +144,7 @@ public class GameService {
         }
     }
 
-    public boolean isLastMove(boolean[][] adjMatrix, Point point, int vertices) {
+    public boolean endOfLine(boolean[][] adjMatrix, Point point, int vertices) {
         for (int x = -1; x < 2; x++) {
             for (int y = -1; y < 2; y++) {
                 Point adj = new Point(point.getX()+x, point.getY()+y);

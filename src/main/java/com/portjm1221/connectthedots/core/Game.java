@@ -14,7 +14,7 @@ public class Game {
         this.vertices = vertices;
         this.maxPlayers = maxPlayers;
         player = 1;
-        adjMatrix = new boolean[vertices][vertices];
+        adjMatrix = new boolean[vertices*vertices][vertices*vertices];
     }
 
     public boolean[][] getAdjMatrix() {
