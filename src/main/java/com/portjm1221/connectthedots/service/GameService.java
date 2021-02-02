@@ -37,6 +37,7 @@ public class GameService {
         int from = getIndexFromPoint(fromPoint, vertices);
         int to = getIndexFromPoint(toPoint, vertices);
         adjMatrix[from][to] = true;
+        adjMatrix[to][from] = true;
     }
 
     public void clearActivePoint(Game game){
@@ -64,18 +65,6 @@ public class GameService {
             }
         }
         return count;
-    }
-
-    private boolean isNodeAdjacent(Point origin, Point other){
-        for (int x = -1; x < 2; x++) {
-            for (int y = -1; y < 2; y++) {
-                Point adj = new Point(origin.getX()+x, origin.getY()+y);
-                if(other.equals(adj)){
-                    return true;
-                }
-            }
-        }
-        return false;
     }
 
     public boolean isValidEndNode(Point to, Point activePoint, boolean[][] adjMatrix, int vertices) {
@@ -117,16 +106,6 @@ public class GameService {
         return false;
     }
 
-    private boolean shiftPoint(int fromX, int fromY, int toX, int toY, int vertices, boolean[][] adjMatrix) {
-        Point fromDiag = new Point(fromX, fromY);
-        Point toDiag = new Point(toX, toY);
-        if (isPointInsideBoardBounds(vertices, fromDiag) && isPointInsideBoardBounds(vertices, toDiag)) {
-            return !pathExists(fromDiag, toDiag, adjMatrix, vertices);
-        } else {
-            return true;
-        }
-    }
-
     public boolean isValidStartNode(Game game, Point point) {
         //Is this the start of the game?
         if(isCleanBoard(game.getAdjMatrix())){
@@ -134,6 +113,42 @@ public class GameService {
         }else {
             //Is it the end of a path? -- The end of a path will only have a single path connecting
             return isEndOfPath(game.getAdjMatrix(), point, game.getVertices());
+        }
+    }
+
+    public boolean isLastMove(boolean[][] adjMatrix, Point point, int vertices) {
+        for (int x = -1; x < 2; x++) {
+            for (int y = -1; y < 2; y++) {
+                Point adj = new Point(point.getX()+x, point.getY()+y);
+                if(isPointInsideBoardBounds(vertices, adj) && !point.equals(adj)){
+                    if(isValidEndNode(adj, point, adjMatrix, vertices)){
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
+    private boolean isNodeAdjacent(Point origin, Point other){
+        for (int x = -1; x < 2; x++) {
+            for (int y = -1; y < 2; y++) {
+                Point adj = new Point(origin.getX()+x, origin.getY()+y);
+                if(other.equals(adj)){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private boolean shiftPoint(int fromX, int fromY, int toX, int toY, int vertices, boolean[][] adjMatrix) {
+        Point fromDiag = new Point(fromX, fromY);
+        Point toDiag = new Point(toX, toY);
+        if (isPointInsideBoardBounds(vertices, fromDiag) && isPointInsideBoardBounds(vertices, toDiag)) {
+            return !pathExists(fromDiag, toDiag, adjMatrix, vertices);
+        } else {
+            return true;
         }
     }
 
@@ -159,21 +174,7 @@ public class GameService {
         if(fromPoint < 0 || toPoint < 0){
             return false;
         }
-        return adjMatrix[toPoint][fromPoint] || adjMatrix[fromPoint][toPoint];
+        return adjMatrix[toPoint][fromPoint];
     }
 
-
-    public boolean isLastMove(boolean[][] adjMatrix, Point point, int vertices) {
-        for (int x = -1; x < 2; x++) {
-            for (int y = -1; y < 2; y++) {
-                Point adj = new Point(point.getX()+x, point.getY()+y);
-                if(isPointInsideBoardBounds(vertices, adj) && !point.equals(adj)){
-                    if(isValidEndNode(adj, point, adjMatrix, vertices)){
-                        return false;
-                    }
-                }
-            }
-        }
-        return true;
-    }
 }
