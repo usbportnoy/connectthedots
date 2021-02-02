@@ -29,9 +29,12 @@ public class NodeClickedOperation implements GameOperation{
             //No, is node valid start node?
             if(gameService.isValidStartNode(point, game.getAdjMatrix(), game.getVertices())){
                 gameService.setActivePoint(game, point);
-                return getPayload("VALID_START_NODE",
-                        GameService.SelectSecondNodeText
-                        , null, GameService.getPlayerNameText(game.getPlayer()));
+                return getPayload(
+                        "VALID_START_NODE",
+                        GameService.SelectSecondNodeText,
+                        null,
+                        GameService.getPlayerNameText(game.getPlayer())
+                );
             }else {
                 return getInvalidStartNodePayload();
             }
