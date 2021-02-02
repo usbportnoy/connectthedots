@@ -9,9 +9,9 @@ import java.util.List;
 public class GameService {
     public static String SelectSecondNodeText = "Select a second node to complete the line.";
     public static String StartOnEndOfAPath = "You must start on either end of the path!";
-    public static String NotValidStartingPosition = "Not a valid starting position.";
+    public static String NotValidStartingPositionText = "Not a valid starting position.";
     public static String InvalidMoveText = "Invalid Move";
-    public static String GameOver = "Game Over";
+    public static String GameOverText = "Game Over";
 
     public static String getPlayerNameText(int player){
         return String.format("Player %d", player);
@@ -61,7 +61,10 @@ public class GameService {
         adjMatrix[to][from] = true;
     }
 
-
+    /**
+     * Clears internal pointer to active point. This is the middle state of selecting the start, and end node
+     * @param game
+     */
     public void clearActivePoint(Game game){
         game.setActivePoint(null);
     }
@@ -87,6 +90,13 @@ public class GameService {
         return getCountOfPathsConnectedToPoint(adjMatrix, point, vertices) == 1;
     }
 
+    /**
+     * Counts the paths that are connected to a point. This is useful for determining if a point has already been used.
+     * @param adjMatrix
+     * @param point
+     * @param vertices
+     * @return
+     */
     public int getCountOfPathsConnectedToPoint(boolean[][] adjMatrix, Point point, int vertices) {
         int count = 0;
         for (int x = -1; x < 2; x++) {
@@ -103,7 +113,8 @@ public class GameService {
     }
 
     /**
-     * Validates if the node is allowed to be an end node. A node that can be an End node can not have a path already connected
+     * Validates if the node is allowed to be an end node.
+     * A node that can be an End node can not have a path already connected
      *
      * @param to Destination node
      * @param activePoint Origin node
@@ -147,7 +158,7 @@ public class GameService {
     }
 
     /**
-     * Needs to be the end of a line, or start from a clean board
+     * Needs to be the end of a line, or start from a clean board.
      * @param point
      * @param adjMatrix
      * @param vertices
@@ -200,6 +211,11 @@ public class GameService {
         return points;
     }
 
+    /**
+     * Checks if the board is clean. A clean board has no paths created yet.
+     * @param adjMatrix
+     * @return
+     */
     public boolean isCleanBoard(boolean[][] adjMatrix) {
         for (boolean[] matrix : adjMatrix) {
             for (boolean path : matrix) {

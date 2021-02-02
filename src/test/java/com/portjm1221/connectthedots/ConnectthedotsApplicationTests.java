@@ -34,7 +34,7 @@ class ConnectthedotsApplicationTests {
 	}
 
 	@Test
-	void listPoints(){
+	void listEndPoints(){
 		Game game = new Game(4, 2);
 		GameExecutor gameExecutor = new GameExecutor(game);
 		gameExecutor.executeOperation(new NodeClickedOperation(game, new Point(0, 0)));

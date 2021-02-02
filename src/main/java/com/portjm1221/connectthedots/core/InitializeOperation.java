@@ -1,5 +1,6 @@
 package com.portjm1221.connectthedots.core;
 
+import com.portjm1221.connectthedots.core.models.Msg;
 import com.portjm1221.connectthedots.core.models.Payload;
 import com.portjm1221.connectthedots.core.models.StateUpdate;
 import com.portjm1221.connectthedots.service.GameService;
@@ -22,7 +23,7 @@ public class InitializeOperation implements GameOperation{
         game.setPlayer(1);
         game.setAdjMatrix(new boolean[game.getVertices()*game.getVertices()][game.getVertices()*game.getVertices()]);
 
-        return new Payload("INITIALIZE",
+        return new Payload(Msg.Initialize.toString(),
                 new StateUpdate(
                         null,
                         GameService.getPlayerNameText(game.getPlayer()),

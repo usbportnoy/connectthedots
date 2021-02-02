@@ -1,9 +1,6 @@
 package com.portjm1221.connectthedots.core;
 
-import com.portjm1221.connectthedots.core.models.Line;
-import com.portjm1221.connectthedots.core.models.Payload;
-import com.portjm1221.connectthedots.core.models.Point;
-import com.portjm1221.connectthedots.core.models.StateUpdate;
+import com.portjm1221.connectthedots.core.models.*;
 import com.portjm1221.connectthedots.service.GameService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +18,12 @@ public class NodeClickedOperation implements GameOperation{
         this.gameService = new GameService();
     }
 
+    /**
+     * Main Game Logic entry point.
+     * Determines current state of the game, and updates the board according to the point of the click.
+     * Returns Payload object to send back to the client.
+     * @return
+     */
     @Override
     public Payload execute() {
         logger.info("Click " + point.toString());
@@ -30,7 +33,7 @@ public class NodeClickedOperation implements GameOperation{
             if(gameService.isValidStartNode(point, game.getAdjMatrix(), game.getVertices())){
                 gameService.setActivePoint(game, point);
                 return getPayload(
-                        "VALID_START_NODE",
+                        Msg.ValidStartNode.toString(),
                         GameService.SelectSecondNodeText,
                         null,
                         GameService.getPlayerNameText(game.getPlayer())
@@ -50,12 +53,21 @@ public class NodeClickedOperation implements GameOperation{
                     return payload;
                 }else {
                     logger.debug("Game Over");
-                    return getPayload("GAME_OVER", GameService.playerWins(game.getPlayer()), getNewLine(), GameService.GameOver);
+                    return getPayload(
+                            Msg.GameOver.toString(),
+                            GameService.playerWins(game.getPlayer()), getNewLine(),
+                            GameService.GameOverText
+                    );
                 }
             }else {
                 //On failure to pick a correct node, it resets on the frontend active node status.
                 gameService.clearActivePoint(game);
-                return getPayload("INVALID_END_NODE", GameService.InvalidMoveText, null, GameService.getPlayerNameText(game.getPlayer()));
+                return getPayload(
+                        Msg.InvalidEndNode.toString(),
+                        GameService.InvalidMoveText,
+                        null,
+                        GameService.getPlayerNameText(game.getPlayer())
+                );
             }
         }
     }
@@ -66,15 +78,27 @@ public class NodeClickedOperation implements GameOperation{
 
     private Payload getInvalidStartNodePayload() {
         return getPayload(
-                "INVALID_START_NODE",
-                gameService.isCleanBoard(game.getAdjMatrix())? GameService.NotValidStartingPosition : GameService.StartOnEndOfAPath,
+                Msg.InvalidStartNode.toString(),
+                getInvalidStartNodeText(),
                 null,
                 GameService.getPlayerNameText(game.getPlayer())
         );
     }
 
+    private String getInvalidStartNodeText() {
+        if (gameService.isCleanBoard(game.getAdjMatrix())) {
+            return GameService.NotValidStartingPositionText;
+        }
+        return GameService.StartOnEndOfAPath;
+    }
+
     private Payload getValidEndNodePayload() {
-        return getPayload("VALID_END_NODE", null, getNewLine(), GameService.getPlayerNameText(game.getPlayer()));
+        return getPayload(
+                Msg.InvalidEndNode.toString(),
+                null,
+                getNewLine(),
+                GameService.getPlayerNameText(game.getPlayer())
+        );
     }
 
     private Line getNewLine() {
