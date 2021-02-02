@@ -45,6 +45,21 @@ class ConnectthedotsApplicationTests {
 	}
 
 	@Test
+	void gameOver(){
+		Game game = new Game(2, 2);
+		GameExecutor gameExecutor = new GameExecutor(game);
+		gameExecutor.executeOperation(new NodeClickedOperation(game, new Point(0, 0)));
+		gameExecutor.executeOperation(new NodeClickedOperation(game, new Point(1, 0)));
+
+		gameExecutor.executeOperation(new NodeClickedOperation(game, new Point(1, 0)));
+		gameExecutor.executeOperation(new NodeClickedOperation(game, new Point(1, 1)));
+
+		gameExecutor.executeOperation(new NodeClickedOperation(game, new Point(1, 1)));
+		Payload payload = gameExecutor.executeOperation(new NodeClickedOperation(game, new Point(0, 1)));
+		assertThat("GAME_OVER").isEqualTo(payload.getMsg());
+	}
+
+	@Test
 	void index(){
 		int zero = GameService.getIndexFromPoint(new Point(0, 0), 4);
 		assertThat(0).isEqualTo(zero);

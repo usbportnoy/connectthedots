@@ -147,18 +147,30 @@ public class GameService {
         }
     }
 
-    public boolean endOfLine(boolean[][] adjMatrix, Point point, int vertices) {
+    public boolean isGameOver(boolean[][] adjMatrix, int vertices) {
+        List<Point> startPoints = getStartPoints(adjMatrix, vertices);
+        boolean hasMoves = false;
+        for (Point startPoint : startPoints) {
+            if(isValidEndNode(adjMatrix, startPoint, vertices)){
+                hasMoves = true;
+                break;
+            }
+        }
+        return !hasMoves;
+    }
+
+    private boolean isValidEndNode(boolean[][] adjMatrix, Point point, int vertices) {
         for (int x = -1; x < 2; x++) {
             for (int y = -1; y < 2; y++) {
                 Point adj = new Point(point.getX()+x, point.getY()+y);
                 if(isPointInsideBoardBounds(vertices, adj) && !point.equals(adj)){
                     if(isValidEndNode(adj, point, adjMatrix, vertices)){
-                        return false;
+                        return true;
                     }
                 }
             }
         }
-        return true;
+        return false;
     }
 
     public List<Point> getStartPoints(boolean[][] adjMatrix, int vertices){

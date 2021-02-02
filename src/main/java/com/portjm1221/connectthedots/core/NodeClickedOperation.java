@@ -5,8 +5,11 @@ import com.portjm1221.connectthedots.core.models.Payload;
 import com.portjm1221.connectthedots.core.models.Point;
 import com.portjm1221.connectthedots.core.models.StateUpdate;
 import com.portjm1221.connectthedots.service.GameService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class NodeClickedOperation implements GameOperation{
+    Logger logger = LoggerFactory.getLogger(NodeClickedOperation.class);
 
     private Game game;
     private Point point;
@@ -20,6 +23,7 @@ public class NodeClickedOperation implements GameOperation{
 
     @Override
     public Payload execute() {
+        logger.info("Click "+point.toString());
         //Are we in the middle of a players move?
         if(game.getActivePoint() == null){
             //No, is node valid start node?
@@ -33,10 +37,10 @@ public class NodeClickedOperation implements GameOperation{
             //Yes, is node valid end node?
             if(gameService.isValidEndNode(point, game.getActivePoint(), game.getAdjMatrix(), game.getVertices())){
                 //Does this win the game?
-                if(!gameService.endOfLine(game.getAdjMatrix(), point, game.getVertices())){
+                gameService.setPath(game.getAdjMatrix(), game.getActivePoint(), point, game.getVertices());
+                if(!gameService.isGameOver(game.getAdjMatrix(), game.getVertices())){
                     gameService.rotatePlayer(game);
                     Payload payload = getValidEndNodePayload();
-                    gameService.setPath(game.getAdjMatrix(), game.getActivePoint(), point, game.getVertices());
                     gameService.clearActivePoint(game);
                     return payload;
                 }else {
