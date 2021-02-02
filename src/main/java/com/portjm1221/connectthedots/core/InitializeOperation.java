@@ -19,9 +19,7 @@ public class InitializeOperation implements GameOperation{
     @Override
     public Payload execute() {
         logger.info("Init game");
-        game.setActivePoint(null);
-        game.setPlayer(1);
-        game.setAdjMatrix(new boolean[game.getVertices()*game.getVertices()][game.getVertices()*game.getVertices()]);
+        new GameService().init(game);
 
         return new Payload(Msg.Initialize.toString(),
                 new StateUpdate(

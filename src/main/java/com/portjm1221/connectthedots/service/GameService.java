@@ -36,6 +36,16 @@ public class GameService {
     }
 
     /**
+     * Brings the game back to start
+     * @param game
+     */
+    public void init(Game game){
+        game.setActivePoint(null);
+        game.setPlayer(1);
+        game.setAdjMatrix(new boolean[game.getVertices()*game.getVertices()][game.getVertices()*game.getVertices()]);
+    }
+
+    /**
      * Moves player counter to the next player. Loops back to start
      * @param game
      */
