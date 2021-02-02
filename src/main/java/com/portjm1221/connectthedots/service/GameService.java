@@ -167,6 +167,19 @@ public class GameService {
         return !hasMoves;
     }
 
+    public List<Point> getStartPoints(boolean[][] adjMatrix, int vertices){
+        List<Point> points = new ArrayList<>();
+        for (int x = 0; x < vertices; x++) {
+            for (int y = 0; y < vertices; y++) {
+                Point point = new Point(x, y);
+                if(isValidStartNode(point, adjMatrix, vertices)){
+                    points.add(point);
+                }
+            }
+        }
+        return points;
+    }
+
     private boolean isValidEndNode(boolean[][] adjMatrix, Point point, int vertices) {
         for (int x = -1; x < 2; x++) {
             for (int y = -1; y < 2; y++) {
@@ -179,19 +192,6 @@ public class GameService {
             }
         }
         return false;
-    }
-
-    public List<Point> getStartPoints(boolean[][] adjMatrix, int vertices){
-        List<Point> points = new ArrayList<>();
-        for (int x = 0; x < vertices; x++) {
-            for (int y = 0; y < vertices; y++) {
-                Point point = new Point(x, y);
-                if(isValidStartNode(point, adjMatrix, vertices)){
-                    points.add(point);
-                }
-            }
-        }
-        return points;
     }
 
     private boolean isNodeAdjacent(Point origin, Point other){
