@@ -23,7 +23,7 @@ public class NodeClickedOperation implements GameOperation{
 
     @Override
     public Payload execute() {
-        logger.info("Click "+point.toString());
+        logger.info("Click " + point.toString());
         //Are we in the middle of a players move?
         if(game.getActivePoint() == null){
             //No, is node valid start node?
