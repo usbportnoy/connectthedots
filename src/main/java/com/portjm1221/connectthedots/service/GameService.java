@@ -150,16 +150,16 @@ public class GameService {
                 } else {
                     if(dX > 0 && dY < 0){
                         //DownLeft
-                        return shiftPoint(activePoint.getX()-1, activePoint.getY(), to.getX()+1, to.getY(), vertices, adjMatrix);
+                        return isClearForPath(activePoint.getX()-1, activePoint.getY(), to.getX()+1, to.getY(), vertices, adjMatrix);
                     }else if(dX < 0 && dY > 0){
                         //UpRight
-                        return shiftPoint(activePoint.getX()+1, activePoint.getY(), to.getX()-1, to.getY(), vertices, adjMatrix);
+                        return isClearForPath(activePoint.getX()+1, activePoint.getY(), to.getX()-1, to.getY(), vertices, adjMatrix);
                     }else if(dX < 0 && dY < 0){
                         //DownRight
-                        return shiftPoint(activePoint.getX()+1, activePoint.getY(), to.getX()-1, to.getY(), vertices, adjMatrix);
+                        return isClearForPath(activePoint.getX()+1, activePoint.getY(), to.getX()-1, to.getY(), vertices, adjMatrix);
                     }else if(dX > 0 && dY > 0){
                         //UpLeft
-                        return shiftPoint(to.getX(), to.getY() + 1, activePoint.getX(), activePoint.getY() - 1, vertices, adjMatrix);
+                        return isClearForPath(to.getX(), to.getY() + 1, activePoint.getX(), activePoint.getY() - 1, vertices, adjMatrix);
                     }
                 }
             }
@@ -262,7 +262,7 @@ public class GameService {
         return false;
     }
 
-    private boolean shiftPoint(int fromX, int fromY, int toX, int toY, int vertices, boolean[][] adjMatrix) {
+    private boolean isClearForPath(int fromX, int fromY, int toX, int toY, int vertices, boolean[][] adjMatrix) {
         Point fromDiag = new Point(fromX, fromY);
         Point toDiag = new Point(toX, toY);
         if (isPointInsideBoardBounds(vertices, fromDiag) && isPointInsideBoardBounds(vertices, toDiag)) {
