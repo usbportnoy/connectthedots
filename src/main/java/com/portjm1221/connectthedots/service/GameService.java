@@ -74,6 +74,14 @@ public class GameService {
         game.setActivePoint(point);
     }
 
+    /**
+     * Determines if this is the end of a path. An end path can only have a single connected point
+     *
+     * @param adjMatrix
+     * @param point End node of a path
+     * @param vertices
+     * @return
+     */
     public boolean isEndOfPath(boolean[][] adjMatrix, Point point, int vertices) {
         return getCountOfPathsConnectedToPoint(adjMatrix, point, vertices) == 1;
     }

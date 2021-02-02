@@ -44,10 +44,11 @@ public class NodeClickedOperation implements GameOperation{
                     gameService.clearActivePoint(game);
                     return payload;
                 }else {
+                    logger.debug("Game Over");
                     return getPayload("GAME_OVER", GameService.playerWins(game.getPlayer()), getNewLine(), GameService.GameOver);
                 }
             }else {
-                //On failure to pick a correct node, it resets on the frontend active node status
+                //On failure to pick a correct node, it resets on the frontend active node status.
                 gameService.clearActivePoint(game);
                 return getPayload("INVALID_END_NODE", GameService.InvalidMoveText, null, GameService.getPlayerNameText(game.getPlayer()));
             }
