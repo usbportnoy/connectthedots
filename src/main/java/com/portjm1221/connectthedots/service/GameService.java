@@ -146,24 +146,20 @@ public class GameService {
                 //If it only contains a change to only x, or y but not both its a vertical line
                 int dX = activePoint.getX() - to.getX();
                 int dY = activePoint.getY() - to.getY();
-                if (dX != 0 && dY == 0) {
+                if ((dX != 0 && dY == 0) || (dX == 0 && dY != 0)) {
                     return true;
-                } else if (dX == 0 && dY != 0) {
-                    return true;
-                } else {
-                    if(dX > 0 && dY < 0){
-                        //DownLeft
-                        return isClearForPath(activePoint.getX()-1, activePoint.getY(), to.getX()+1, to.getY(), vertices, adjMatrix);
-                    }else if(dX < 0 && dY > 0){
-                        //UpRight
-                        return isClearForPath(activePoint.getX()+1, activePoint.getY(), to.getX()-1, to.getY(), vertices, adjMatrix);
-                    }else if(dX < 0 && dY < 0){
-                        //DownRight
-                        return isClearForPath(activePoint.getX()+1, activePoint.getY(), to.getX()-1, to.getY(), vertices, adjMatrix);
-                    }else if(dX > 0 && dY > 0){
-                        //UpLeft
-                        return isClearForPath(to.getX(), to.getY() + 1, activePoint.getX(), activePoint.getY() - 1, vertices, adjMatrix);
-                    }
+                } else if(dX > 0 && dY < 0){
+                    //DownLeft
+                    return isClearForPath(activePoint.getX()-1, activePoint.getY(), to.getX()+1, to.getY(), vertices, adjMatrix);
+                }else if(dX < 0 && dY > 0){
+                    //UpRight
+                    return isClearForPath(activePoint.getX()+1, activePoint.getY(), to.getX()-1, to.getY(), vertices, adjMatrix);
+                }else if(dX < 0 && dY < 0){
+                    //DownRight
+                    return isClearForPath(activePoint.getX()+1, activePoint.getY(), to.getX()-1, to.getY(), vertices, adjMatrix);
+                }else if(dX > 0 && dY > 0){
+                    //UpLeft
+                    return isClearForPath(to.getX(), to.getY() + 1, activePoint.getX(), activePoint.getY() - 1, vertices, adjMatrix);
                 }
             }
         }

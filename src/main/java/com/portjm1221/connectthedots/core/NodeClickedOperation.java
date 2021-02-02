@@ -32,14 +32,18 @@ public class NodeClickedOperation implements GameOperation{
             //No, is node valid start node?
             if(gameService.isValidStartNode(point, game.getAdjMatrix(), game.getVertices())){
                 gameService.setActivePoint(game, point);
-                return getPayload(
-                        Msg.ValidStartNode.toString(),
-                        GameService.SelectSecondNodeText,
-                        null,
-                        GameService.getPlayerNameText(game.getPlayer())
-                );
+                return new Payload.PayloadBuilder()
+                        .messageIs(Msg.ValidStartNode)
+                        .withPlayerHeading(game.getPlayer())
+                        .say(GameService.SelectSecondNodeText)
+                        .build();
+
             }else {
-                return getInvalidStartNodePayload();
+                return new Payload.PayloadBuilder()
+                        .messageIs(Msg.InvalidStartNode)
+                        .withPlayerHeading(game.getPlayer())
+                        .say(getInvalidStartNodeText())
+                        .build();
             }
         }else{
             //Yes, is node valid end node?
@@ -48,42 +52,36 @@ public class NodeClickedOperation implements GameOperation{
                 gameService.rotatePlayer(game);
                 //Does this win the game?
                 if(!gameService.isGameOver(game.getAdjMatrix(), game.getVertices())){
-                    Payload payload = getValidEndNodePayload();
+                    Payload payload = new Payload.PayloadBuilder()
+                            .messageIs(Msg.ValidEndNode)
+                            .withPlayerHeading(game.getPlayer())
+                            .add(getNewLine(game, point))
+                            .build();
+
                     gameService.clearActivePoint(game);
                     return payload;
                 }else {
                     logger.debug("Game Over");
-                    return getPayload(
-                            Msg.GameOver.toString(),
-                            GameService.playerWins(game.getPlayer()), getNewLine(),
-                            GameService.GameOverText
-                    );
+                    return new Payload.PayloadBuilder()
+                            .messageIs(Msg.GameOver)
+                            .withHeading(GameService.GameOverText)
+                            .say(GameService.playerWins(game.getPlayer()))
+                            .add(getNewLine(game, point))
+                            .build();
                 }
             }else {
                 //On failure to pick a correct node, it resets on the frontend active node status.
                 gameService.clearActivePoint(game);
-                return getPayload(
-                        Msg.InvalidEndNode.toString(),
-                        GameService.InvalidMoveText,
-                        null,
-                        GameService.getPlayerNameText(game.getPlayer())
-                );
+
+                return new Payload.PayloadBuilder()
+                        .messageIs(Msg.InvalidEndNode)
+                        .withPlayerHeading(game.getPlayer())
+                        .say(GameService.InvalidMoveText)
+                        .build();
             }
         }
     }
 
-    private Payload getPayload(String msg, String message, Line newLine, String heading) {
-        return new Payload(msg, new StateUpdate(newLine, heading, message));
-    }
-
-    private Payload getInvalidStartNodePayload() {
-        return getPayload(
-                Msg.InvalidStartNode.toString(),
-                getInvalidStartNodeText(),
-                null,
-                GameService.getPlayerNameText(game.getPlayer())
-        );
-    }
 
     private String getInvalidStartNodeText() {
         if (gameService.isCleanBoard(game.getAdjMatrix())) {
@@ -92,19 +90,10 @@ public class NodeClickedOperation implements GameOperation{
         return GameService.StartOnEndOfAPath;
     }
 
-    private Payload getValidEndNodePayload() {
-        return getPayload(
-                Msg.InvalidEndNode.toString(),
-                null,
-                getNewLine(),
-                GameService.getPlayerNameText(game.getPlayer())
-        );
-    }
-
-    private Line getNewLine() {
+    private Line getNewLine(Game game, Point point) {
         return new Line(
-                new Point(game.getActivePoint().getX(), game.getActivePoint().getY()),
-                new Point(point.getX(), point.getY())
+                new Point(game.getActivePoint().getX(), this.game.getActivePoint().getY()),
+                new Point(point.getX(), this.point.getY())
         );
     }
 
