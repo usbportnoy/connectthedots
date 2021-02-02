@@ -51,14 +51,7 @@ public class NodeClickedOperation implements GameOperation{
     }
 
     private Payload getPayload(String msg, String message, Line newLine, String heading) {
-        return new Payload(
-                msg,
-                new StateUpdate(
-                        newLine,
-                        heading,
-                        message
-                )
-        );
+        return new Payload(msg, new StateUpdate(newLine, heading, message));
     }
 
     private Payload getInvalidStartNodePayload() {

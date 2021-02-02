@@ -188,8 +188,8 @@ public class GameService {
 
     private boolean isCleanBoard(boolean[][] adjMatrix) {
         for (boolean[] matrix : adjMatrix) {
-            for (boolean b : matrix) {
-                if(b) return false;
+            for (boolean path : matrix) {
+                if(path) return false;
             }
         }
 
