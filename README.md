@@ -1,10 +1,10 @@
-Summary
+# Project
 Connect the Dots game Technical Assessment
-The Game
+## The Game
 A connect-the-dots game for two players.
 Definitions
 octilinear line - a horizontal, vertical, or 45° diagonal line
-Rules
+## Rules
 The game is played on a 4x4 grid of 16 nodes.
 Players take turns drawing octilinear lines connecting nodes.
 Each line must begin at the start or end of the existing path, so that all lines form a continuous path.
@@ -15,7 +15,7 @@ No node can be visited twice.
 The game ends when no valid lines can be drawn.
 The player who draws the last line is the loser.
 
-
+# Summary
 Implemented game server in Java 11 using Spring Framework. The provided client communicates with the Game Server web endpoints. The client was provided with JS. And is also served by the Java Spring server.
 
 The frontend maintains little to no state for the game. 
@@ -23,7 +23,7 @@ The state provided by the game server is the current player, status about the st
 
 The frontend provides the client and the board.
 
-Implementation
+# Implementation
 For the game logic I implemented a command pattern. Command patterns are great for modifying a single state, while keeping a record of each command. Theyre frequently used in game development.
 
 https://en.wikipedia.org/wiki/Command_pattern
@@ -34,8 +34,15 @@ https://mathworld.wolfram.com/AdjacencyMatrix.html
 
 The Game Service provided does logical work for the game, and are the entry points to change the game state. The game operators control the game state.
 
-Build
+# Build
+```
+./gradlew assemble
+java -jar ./build/libs/connectthedots-0.0.1-SNAPSHOT.jar
+google-chrome http://localhost:8080/
+```
 
+
+```
 Ξ connectthedots git:(main) ▶ java -version
 openjdk version "11.0.9.1" 2020-11-04
 OpenJDK Runtime Environment (build 11.0.9.1+1-Ubuntu-0ubuntu1.20.04)
@@ -71,5 +78,5 @@ Starting a Gradle Daemon, 2 incompatible and 1 stopped Daemons could not be reus
 BUILD SUCCESSFUL in 15s
 4 actionable tasks: 3 executed, 1 up-to-date
 Ξ connectthedots git:(main) ▶ java -jar ./build/libs/connectthedots-0.0.1-SNAPSHOT.jar
-
+```
 http://localhost:8080/
