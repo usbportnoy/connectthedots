@@ -145,6 +145,13 @@ public class GameService {
         return false;
     }
 
+    /**
+     * Needs to be the end of a line, or start from a clean board
+     * @param point
+     * @param adjMatrix
+     * @param vertices
+     * @return
+     */
     public boolean isValidStartNode(Point point, boolean[][] adjMatrix, int vertices) {
         //Is this the start of the game?
         if(isCleanBoard(adjMatrix)){
@@ -155,6 +162,12 @@ public class GameService {
         }
     }
 
+    /**
+     * Check if a game has no moves left
+     * @param adjMatrix
+     * @param vertices
+     * @return
+     */
     public boolean isGameOver(boolean[][] adjMatrix, int vertices) {
         List<Point> startPoints = getStartPoints(adjMatrix, vertices);
         boolean hasMoves = false;
@@ -167,6 +180,12 @@ public class GameService {
         return !hasMoves;
     }
 
+    /**
+     * Finds all start points on the board
+     * @param adjMatrix
+     * @param vertices
+     * @return
+     */
     public List<Point> getStartPoints(boolean[][] adjMatrix, int vertices){
         List<Point> points = new ArrayList<>();
         for (int x = 0; x < vertices; x++) {
