@@ -3,6 +3,9 @@ package com.portjm1221.connectthedots.service;
 import com.portjm1221.connectthedots.core.Game;
 import com.portjm1221.connectthedots.core.models.Point;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class GameService {
     public static String SelectSecondNodeText = "Select a second node to complete the line.";
     public static String NotValidStartingPosition = "Not a valid starting position.";
@@ -156,6 +159,19 @@ public class GameService {
             }
         }
         return true;
+    }
+
+    public List<Point> getStartPoints(boolean[][] adjMatrix, int vertices){
+        List<Point> points = new ArrayList<>();
+        for (int x = 0; x < vertices; x++) {
+            for (int y = 0; y < vertices; y++) {
+                Point point = new Point(x, y);
+                if(isValidStartNode(point, adjMatrix, vertices)){
+                    points.add(point);
+                }
+            }
+        }
+        return points;
     }
 
     private boolean isNodeAdjacent(Point origin, Point other){

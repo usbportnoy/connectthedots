@@ -9,22 +9,19 @@ import com.portjm1221.connectthedots.service.GameService;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 class ConnectthedotsApplicationTests {
 	@Test
-	void printsGame() {
-		Game game = new Game(4, 2);
-		assertThat(game.toString()).isNotNull();
-	}
-
-	@Test
 	void validStart() {
 		Game game = new Game(4, 2);
 		GameExecutor gameExecutor = new GameExecutor(game);
 		Payload payload = gameExecutor.executeOperation(new NodeClickedOperation(game, new Point(0, 0)));
-		assertThat(payload.getMsg()).isEqualTo("VALID_START_NODE");
+		assertThat("VALID_START_NODE").isEqualTo(payload.getMsg());
+
 	}
 
 	@Test
@@ -33,7 +30,32 @@ class ConnectthedotsApplicationTests {
 		GameExecutor gameExecutor = new GameExecutor(game);
 		gameExecutor.executeOperation(new NodeClickedOperation(game, new Point(0, 0)));
 		Payload payload = gameExecutor.executeOperation(new NodeClickedOperation(game, new Point(1, 0)));
-		assertThat(payload.getMsg()).isEqualTo("VALID_END_NODE");
+		assertThat("VALID_END_NODE").isEqualTo(payload.getMsg());
 	}
 
+	@Test
+	void listPoints(){
+		Game game = new Game(4, 2);
+		GameExecutor gameExecutor = new GameExecutor(game);
+		gameExecutor.executeOperation(new NodeClickedOperation(game, new Point(0, 0)));
+		Payload payload = gameExecutor.executeOperation(new NodeClickedOperation(game, new Point(1, 0)));
+		GameService gameService = new GameService();
+		List<Point> startPoints = gameService.getStartPoints(game.getAdjMatrix(), game.getVertices());
+		assertThat(2).isEqualTo(startPoints.size());
+	}
+
+	@Test
+	void index(){
+		int zero = GameService.getIndexFromPoint(new Point(0, 0), 4);
+		assertThat(0).isEqualTo(zero);
+
+		int three = GameService.getIndexFromPoint(new Point(3, 0), 4);
+		assertThat(3).isEqualTo(three);
+
+		int eight = GameService.getIndexFromPoint(new Point(0, 2), 4);
+		assertThat(8).isEqualTo(eight);
+
+		int fifteen = GameService.getIndexFromPoint(new Point(3, 3), 4);
+		assertThat(15).isEqualTo(fifteen);
+	}
 }

@@ -33,7 +33,7 @@ public class NodeClickedOperation implements GameOperation{
             //Yes, is node valid end node?
             if(gameService.isValidEndNode(point, game.getActivePoint(), game.getAdjMatrix(), game.getVertices())){
                 //Does this win the game?
-                if(!gameService.isLastMove(game.getAdjMatrix(), point, game.getVertices())){
+                if(!gameService.endOfLine(game.getAdjMatrix(), point, game.getVertices())){
                     gameService.rotatePlayer(game);
                     Payload payload = getValidEndNodePayload();
                     gameService.setPath(game.getAdjMatrix(), game.getActivePoint(), point, game.getVertices());
