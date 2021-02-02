@@ -5,6 +5,7 @@ import com.portjm1221.connectthedots.core.GameExecutor;
 import com.portjm1221.connectthedots.core.NodeClickedOperation;
 import com.portjm1221.connectthedots.core.models.Payload;
 import com.portjm1221.connectthedots.core.models.Point;
+import com.portjm1221.connectthedots.service.GameService;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 

@@ -23,9 +23,9 @@ public class NodeClickedOperation implements GameOperation{
         //Are we in the middle of a players move?
         if(game.getActivePoint() == null){
             //No, is node valid start node?
-            if(gameService.isValidStartNode(game, point)){
+            if(gameService.isValidStartNode(point, game.getAdjMatrix(), game.getVertices())){
                 gameService.setActivePoint(game, point);
-                return getPayload("VALID_START_NODE", GameService.SelectSecondNodeText, null, GameService.getPlayerNameText(game));
+                return getPayload("VALID_START_NODE", GameService.SelectSecondNodeText, null, GameService.getPlayerNameText(game.getPlayer()));
             }else {
                 return getInvalidStartNodePayload();
             }
@@ -40,12 +40,12 @@ public class NodeClickedOperation implements GameOperation{
                     gameService.clearActivePoint(game);
                     return payload;
                 }else {
-                    return getPayload("GAME_OVER", GameService.playerWins(game), getNewLine(), GameService.GameOver);
+                    return getPayload("GAME_OVER", GameService.playerWins(game.getPlayer()), getNewLine(), GameService.GameOver);
                 }
             }else {
                 //On failure to pick a correct node, it resets on the frontend active node status
                 gameService.clearActivePoint(game);
-                return getPayload("INVALID_END_NODE", GameService.InvalidMoveText, null, GameService.getPlayerNameText(game));
+                return getPayload("INVALID_END_NODE", GameService.InvalidMoveText, null, GameService.getPlayerNameText(game.getPlayer()));
             }
         }
     }
@@ -62,11 +62,11 @@ public class NodeClickedOperation implements GameOperation{
     }
 
     private Payload getInvalidStartNodePayload() {
-        return getPayload("INVALID_START_NODE", GameService.NotValidStartingPosition, null, GameService.getPlayerNameText(game));
+        return getPayload("INVALID_START_NODE", GameService.NotValidStartingPosition, null, GameService.getPlayerNameText(game.getPlayer()));
     }
 
     private Payload getValidEndNodePayload() {
-        return getPayload("VALID_END_NODE", null, getNewLine(), GameService.getPlayerNameText(game));
+        return getPayload("VALID_END_NODE", null, getNewLine(), GameService.getPlayerNameText(game.getPlayer()));
     }
 
     private Line getNewLine() {

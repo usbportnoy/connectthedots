@@ -21,8 +21,8 @@ public class InitializeOperation implements GameOperation{
         return new Payload("INITIALIZE",
                 new StateUpdate(
                         null,
-                        GameService.getPlayerNameText(game),
-                        GameService.awaitingPlayerTurnText(game)
+                        GameService.getPlayerNameText(game.getPlayer()),
+                        GameService.awaitingPlayerTurnText(game.getPlayer())
                 )
         );
     }

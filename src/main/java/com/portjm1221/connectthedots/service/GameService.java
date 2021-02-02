@@ -9,16 +9,16 @@ public class GameService {
     public static String InvalidMoveText = "Invalid Move";
     public static String GameOver = "Game Over";
 
-    public static String getPlayerNameText(Game game){
-        return String.format("Player %d", game.getPlayer());
+    public static String getPlayerNameText(int player){
+        return String.format("Player %d", player);
     }
 
-    public static String awaitingPlayerTurnText(Game game){
-        return String.format("Awaiting Player %d's Move", game.getPlayer());
+    public static String awaitingPlayerTurnText(int player){
+        return String.format("Awaiting Player %d's Move", player);
     }
 
-    public static String playerWins(Game game){
-        return String.format("Player %d Wins!", game.getPlayer());
+    public static String playerWins(int player){
+        return String.format("Player %d Wins!", player);
     }
 
     public static int getIndexFromPoint(Point point, int vertices) {
@@ -85,17 +85,13 @@ public class GameService {
                 } else {
                     if(dX > 0 && dY < 0){
                         //DownLeft
-                        //From -x
-                        //To +x
                         return shiftPoint(activePoint.getX()-1, activePoint.getY(), to.getX()+1, to.getY(), vertices, adjMatrix);
                     }else if(dX < 0 && dY > 0){
                         //UpRight
                         return shiftPoint(activePoint.getX()+1, activePoint.getY(), to.getX()-1, to.getY(), vertices, adjMatrix);
                     }else if(dX < 0 && dY < 0){
                         //DownRight
-                        //From +x
                         return shiftPoint(activePoint.getX()+1, activePoint.getY(), to.getX()-1, to.getY(), vertices, adjMatrix);
-                        //To -x
                     }else if(dX > 0 && dY > 0){
                         //UpLeft
                         return shiftPoint(to.getX(), to.getY() + 1, activePoint.getX(), activePoint.getY() - 1, vertices, adjMatrix);
@@ -106,13 +102,13 @@ public class GameService {
         return false;
     }
 
-    public boolean isValidStartNode(Game game, Point point) {
+    public boolean isValidStartNode(Point point, boolean[][] adjMatrix, int vertices) {
         //Is this the start of the game?
-        if(isCleanBoard(game.getAdjMatrix())){
+        if(isCleanBoard(adjMatrix)){
             return true;
         }else {
             //Is it the end of a path? -- The end of a path will only have a single path connecting
-            return isEndOfPath(game.getAdjMatrix(), point, game.getVertices());
+            return isEndOfPath(adjMatrix, point, vertices);
         }
     }
 
