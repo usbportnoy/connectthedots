@@ -8,6 +8,7 @@ import java.util.List;
 
 public class GameService {
     public static String SelectSecondNodeText = "Select a second node to complete the line.";
+    public static String StartOnEndOfAPath = "You must start on either end of the path!";
     public static String NotValidStartingPosition = "Not a valid starting position.";
     public static String InvalidMoveText = "Invalid Move";
     public static String GameOver = "Game Over";
@@ -199,6 +200,16 @@ public class GameService {
         return points;
     }
 
+    public boolean isCleanBoard(boolean[][] adjMatrix) {
+        for (boolean[] matrix : adjMatrix) {
+            for (boolean path : matrix) {
+                if(path) return false;
+            }
+        }
+
+        return true;
+    }
+
     private boolean isValidEndNode(boolean[][] adjMatrix, Point point, int vertices) {
         for (int x = -1; x < 2; x++) {
             for (int y = -1; y < 2; y++) {
@@ -239,16 +250,6 @@ public class GameService {
         int x = point.getX();
         int y = point.getY();
         return (x >= 0 && y >= 0) && (x < vertices && y < vertices);
-    }
-
-    private boolean isCleanBoard(boolean[][] adjMatrix) {
-        for (boolean[] matrix : adjMatrix) {
-            for (boolean path : matrix) {
-                if(path) return false;
-            }
-        }
-
-        return true;
     }
 
     private boolean pathExists(Point from, Point to, boolean[][] adjMatrix, int vertices){

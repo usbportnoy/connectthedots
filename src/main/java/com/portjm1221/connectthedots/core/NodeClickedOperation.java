@@ -29,7 +29,9 @@ public class NodeClickedOperation implements GameOperation{
             //No, is node valid start node?
             if(gameService.isValidStartNode(point, game.getAdjMatrix(), game.getVertices())){
                 gameService.setActivePoint(game, point);
-                return getPayload("VALID_START_NODE", GameService.SelectSecondNodeText, null, GameService.getPlayerNameText(game.getPlayer()));
+                return getPayload("VALID_START_NODE",
+                        GameService.SelectSecondNodeText
+                        , null, GameService.getPlayerNameText(game.getPlayer()));
             }else {
                 return getInvalidStartNodePayload();
             }
@@ -60,7 +62,12 @@ public class NodeClickedOperation implements GameOperation{
     }
 
     private Payload getInvalidStartNodePayload() {
-        return getPayload("INVALID_START_NODE", GameService.NotValidStartingPosition, null, GameService.getPlayerNameText(game.getPlayer()));
+        return getPayload(
+                "INVALID_START_NODE",
+                gameService.isCleanBoard(game.getAdjMatrix())? GameService.NotValidStartingPosition : GameService.StartOnEndOfAPath,
+                null,
+                GameService.getPlayerNameText(game.getPlayer())
+        );
     }
 
     private Payload getValidEndNodePayload() {
