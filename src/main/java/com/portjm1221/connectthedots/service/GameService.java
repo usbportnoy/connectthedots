@@ -6,6 +6,9 @@ import com.portjm1221.connectthedots.core.models.Point;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Game Service, controls internal state of the game, and helps serve content.
+ */
 public class GameService {
     public static String SelectSecondNodeText = "Select a second node to complete the line.";
     public static String StartOnEndOfAPath = "You must start on either end of the path!";
@@ -37,7 +40,7 @@ public class GameService {
 
     /**
      * Brings the game back to start
-     * @param game
+     * @param game Game
      */
     public void init(Game game){
         game.setActivePoint(null);
@@ -47,7 +50,7 @@ public class GameService {
 
     /**
      * Moves player counter to the next player. Loops back to start
-     * @param game
+     * @param game Game
      */
     public void rotatePlayer(Game game){
         if(game.getPlayer()+1 > game.getMaxPlayers()){
@@ -73,7 +76,7 @@ public class GameService {
 
     /**
      * Clears internal pointer to active point. This is the middle state of selecting the start, and end node
-     * @param game
+     * @param game Game
      */
     public void clearActivePoint(Game game){
         game.setActivePoint(null);
@@ -81,7 +84,7 @@ public class GameService {
 
     /**
      * Sets the active point for the Game. This is the first half of a move
-     * @param game
+     * @param game Game
      * @param point Point to be active
      */
     public void setActivePoint(Game game, Point point){
@@ -91,10 +94,10 @@ public class GameService {
     /**
      * Determines if this is the end of a path. An end path can only have a single connected point
      *
-     * @param adjMatrix
+     * @param adjMatrix Adjacent Matrix
      * @param point End node of a path
-     * @param vertices
-     * @return
+     * @param vertices Vertices
+     * @return Path only has a single connection
      */
     public boolean isEndOfPath(boolean[][] adjMatrix, Point point, int vertices) {
         return getCountOfPathsConnectedToPoint(adjMatrix, point, vertices) == 1;
@@ -102,10 +105,10 @@ public class GameService {
 
     /**
      * Counts the paths that are connected to a point. This is useful for determining if a point has already been used.
-     * @param adjMatrix
-     * @param point
-     * @param vertices
-     * @return
+     * @param adjMatrix Adjacent Matrix
+     * @param point Point to query
+     * @param vertices Vertices
+     * @return Count of paths connected to a point
      */
     public int getCountOfPathsConnectedToPoint(boolean[][] adjMatrix, Point point, int vertices) {
         int count = 0;
@@ -128,9 +131,9 @@ public class GameService {
      *
      * @param to Destination node
      * @param activePoint Origin node
-     * @param adjMatrix
-     * @param vertices
-     * @return
+     * @param adjMatrix Adjacent Matrix
+     * @param vertices Vertices
+     * @return Is valid path end node
      */
     public boolean isValidEndNode(Point to, Point activePoint, boolean[][] adjMatrix, int vertices) {
         //Is this node adjacent to the active one?
@@ -169,10 +172,10 @@ public class GameService {
 
     /**
      * Needs to be the end of a line, or start from a clean board.
-     * @param point
-     * @param adjMatrix
-     * @param vertices
-     * @return
+     * @param point Clicked Node
+     * @param adjMatrix Adjacent Matrix
+     * @param vertices Vertices
+     * @return Is valid start node
      */
     public boolean isValidStartNode(Point point, boolean[][] adjMatrix, int vertices) {
         //Is this the start of the game?
@@ -186,9 +189,9 @@ public class GameService {
 
     /**
      * Check if a game has no moves left
-     * @param adjMatrix
-     * @param vertices
-     * @return
+     * @param adjMatrix Adjacent Matrix
+     * @param vertices Vertices
+     * @return Is game over
      */
     public boolean isGameOver(boolean[][] adjMatrix, int vertices) {
         List<Point> startPoints = getStartPoints(adjMatrix, vertices);
@@ -204,9 +207,9 @@ public class GameService {
 
     /**
      * Finds all start points on the board
-     * @param adjMatrix
-     * @param vertices
-     * @return
+     * @param adjMatrix Adjacent Matrix
+     * @param vertices Vertices
+     * @return Returns all starting points on the board
      */
     public List<Point> getStartPoints(boolean[][] adjMatrix, int vertices){
         List<Point> points = new ArrayList<>();
@@ -223,8 +226,8 @@ public class GameService {
 
     /**
      * Checks if the board is clean. A clean board has no paths created yet.
-     * @param adjMatrix
-     * @return
+     * @param adjMatrix Adjacent Matrix
+     * @return Is board clean
      */
     public boolean isCleanBoard(boolean[][] adjMatrix) {
         for (boolean[] matrix : adjMatrix) {
